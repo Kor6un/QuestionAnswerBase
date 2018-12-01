@@ -14,7 +14,7 @@ public class Driver {
     public static Connection connection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/posgres",
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres",
                     "postgres", "153624");
         } catch (SQLException e) {
             System.out.println("connection failed");
