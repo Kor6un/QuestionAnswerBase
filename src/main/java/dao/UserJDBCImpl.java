@@ -2,20 +2,12 @@ package dao;
 
 import dao.entities.User;
 import dao.utils.Driver;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import static dao.utils.QuerySQL.INSERT_USER;
+import static dao.utils.QuerySQL.SELECT_USER_ID;
 
-import static dao.entities.QuerySQL.INSERT_USER;
-import static dao.entities.QuerySQL.SELECT_USER_ID;
-
-public class UserJDBCImpl {
-    private static final int FIRST_ARGUMENT = 1;
-    private static final int SECOND_ARGUMENT = 2;
-    private static final int THIRD_ARGUMENT = 3;
-
+public class UserJDBCImpl extends AbstractJDBCImpl {
     public int addUser(String name) {
         int result;
         try (Connection connection = Driver.connection()) {
@@ -41,27 +33,4 @@ public class UserJDBCImpl {
         }
         return user;
     }
-
-    private int getEntityID(String value, String sql, Connection connection) throws SQLException {
-        ResultSet resultSet = null;
-        int result = -1;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(FIRST_ARGUMENT, value);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-               result =  resultSet.getInt("id");
-            }
-        } finally {
-            Driver.closeResultSet(resultSet);
-        }
-        return result;
-    }
-
-    private void addEntity(String value, String sql, Connection connection) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(FIRST_ARGUMENT, value);
-            statement.execute();
-        }
-    }
-
 }
