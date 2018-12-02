@@ -1,11 +1,9 @@
 package dao;
 
-import dao.entities.Answer;
 import dao.utils.Driver;
 import dao.utils.QuerySQL;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ServiceJDBCImpl {
@@ -50,14 +48,14 @@ public class ServiceJDBCImpl {
             connection = Driver.connection();
             connection.setAutoCommit(false);
 
-
             int userID = getUserID(userName, connection);
             int questionID = getQuestionID(question, connection);
             new AnswerJDBCImpl().addAnswer(answer, questionID, userID, connection);
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
+        } finally {
+            Driver.closeConnection(connection);
         }
-        Driver.closeConnection(connection);
     }
 }

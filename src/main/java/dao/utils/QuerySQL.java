@@ -9,6 +9,10 @@ public enum QuerySQL {
     INSERT_ANSWER("INSERT INTO answer (answer, question_id, user_id) VALUES (?, ?, ?)"),
     SELECT_ANSWER_ID("SELECT id FROM answer WHERE answer = ?"),
     SELECT_ANSWER("SELECT * FROM answer WHERE user_id = ? AND question_id = ?"),
+    SELECT_USER_ANSWERS("SELECT * FROM answer WHERE user_id = ?"),
+    DELETE_USER("DELETE FROM users WHERE id = ?"),
+    DELETE_ANSWER("DELETE FROM answer WHERE id = ?"),
+    DELETE_QUESTION("DELETE FROM question WHERE id = ?"),
     ;
 
     public String getQuery() {
