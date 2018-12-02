@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static dao.utils.QuerySQL.INSERT_QUESTION;
 
 public class QuestionJDBCImpl extends AbstractJDBCImpl {
     public int addQuestion(String question, int userID) {
