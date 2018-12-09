@@ -3,7 +3,10 @@ package dao;
 import dao.utils.Driver;
 import dao.utils.QuerySQL;
 
+import javax.swing.text.html.HTMLDocument;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ServiceJDBCImpl extends AbstractJDBCImpl {
@@ -47,5 +50,19 @@ public class ServiceJDBCImpl extends AbstractJDBCImpl {
         } finally {
             Driver.closeConnection(connection);
         }
+    }
+    public String getStatistic() throws SQLException {
+        StringBuilder stringBuilder = new StringBuilder();
+        ResultSet resultSet = null;
+        try (Connection connection = Driver.connection();
+                PreparedStatement statement = connection.prepareStatement(QuerySQL.SELECT_NAME_QUESTION_ANSWER.getQuery())) {
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                stringBuilder.append(resultSet.getString(FIRST_ARGUMENT)).append(" | ")
+                        .append(resultSet.getString(SECOND_ARGUMENT)).append(" | ")
+                        .append(resultSet.getString(THIRD_ARGUMENT)).append('\n');
+            }
+        }
+        return stringBuilder.toString();
     }
 }

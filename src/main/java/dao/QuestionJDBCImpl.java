@@ -1,5 +1,6 @@
 package dao;
 
+import dao.entities.Answer;
 import dao.entities.Question;
 import dao.utils.Driver;
 import dao.utils.QuerySQL;
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class QuestionJDBCImpl extends AbstractJDBCImpl {
     public int addQuestion(String question, int userID) {
@@ -33,7 +35,36 @@ public class QuestionJDBCImpl extends AbstractJDBCImpl {
         return result;
     }
 
-    public void deleteQuestion(int questionID, Connection connection) throws SQLException {
+    public void deleteQuestion(String question) throws SQLException {
+        Connection connection = null;
+
+        try {
+            connection = Driver.connection();
+            connection.setAutoCommit(false);
+
+            int questionID;
+            if ((questionID = getEntityID(question, QuerySQL.SELECT_QUESTION.getQuery(), connection)) == -1) {
+                throw new SQLException("the question not found");
+            }
+
+            List<Answer> answers;
+            if ((answers = new AnswerJDBCImpl().getBoundedLink(questionID, QuerySQL.SELECT_QUESTION_ANSWER.getQuery(), connection)) != null) {
+                AnswerJDBCImpl answerJDBC = new AnswerJDBCImpl();
+                for (Answer a: answers) {
+                    answerJDBC.deleteAnswer(a.getId(), connection);
+                }
+            }
+
+            deleteQuestionByID(questionID, connection);
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+        } finally {
+            Driver.closeConnection(connection);
+        }
+    }
+
+    public void deleteQuestionByID(int questionID, Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(QuerySQL.SELECT_QUESTION_ANSWER.getQuery());
         statement.setInt(FIRST_ARGUMENT, questionID);
         ResultSet resultSet = statement.executeQuery();

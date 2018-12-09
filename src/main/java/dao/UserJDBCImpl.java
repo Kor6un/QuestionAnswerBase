@@ -75,7 +75,7 @@ public class UserJDBCImpl extends AbstractJDBCImpl {
                     questionID = a.getQuestionID();
                     answerID = a.getId();
                     answerJDBC.deleteAnswer(answerID, connection);
-                    questionJDBC.deleteQuestion(questionID,connection);
+                    questionJDBC.deleteQuestionByID(questionID,connection);
                 }
             }
 

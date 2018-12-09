@@ -14,6 +14,9 @@ public enum QuerySQL {
     DELETE_USER("DELETE FROM users WHERE id = ?"),
     DELETE_ANSWER("DELETE FROM answer WHERE id = ?"),
     DELETE_QUESTION("DELETE FROM question WHERE id = ?"),
+    SELECT_NAME_QUESTION_ANSWER("SELECT users.name, public.question.question, answer.answer\n" +
+            "FROM users JOIN answer on users.id = answer.user_id\n" +
+            "           JOIN question on answer.question_id = question.id"),
     ;
 
     public String getQuery() {
