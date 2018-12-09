@@ -1,18 +1,27 @@
-package dao.entities;
+package dao.entities.hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 
-public class User {
+@Entity
+@Table(name = "users")
+public class Users {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @Column(name = "name")
     private String name;
 
-    public User(int id, String name) {
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answers> answers;
+
+    public Users(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public User() {}
+    public Users() {}
 
     public int getId() {
         return id;

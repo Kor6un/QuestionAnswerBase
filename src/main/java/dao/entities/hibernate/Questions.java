@@ -1,24 +1,32 @@
-package dao.entities;
+package dao.entities.hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 
-
-public class Question {
-
+@Entity
+@Table(name = "question")
+public class Questions {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "question")
     private String question;
 
-    public Question( String question) {
+    @ManyToMany(mappedBy = "questions", cascade = CascadeType.ALL)
+    private List<Answers> answers;
+
+    public Questions( String question) {
         this.question = question;
     }
 
-    public Question(int id, String question) {
+    public Questions(int id, String question) {
         this.id = id;
         this.question = question;
     }
 
-    public Question() {
+    public Questions() {
     }
 
     public int getId() {
@@ -35,6 +43,10 @@ public class Question {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public List<Answers> getAnswers() {
+        return answers;
     }
 
     @Override

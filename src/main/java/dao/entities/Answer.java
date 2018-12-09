@@ -1,9 +1,16 @@
 package dao.entities;
 
+import javax.persistence.*;
+
 public class Answer {
+
     private int id;
+
     private String answer;
+
     private int questionID;
+
+
     private int userID;
 
     public Answer(String answer, int questionID, int userID) {

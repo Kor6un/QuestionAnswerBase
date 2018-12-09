@@ -1,12 +1,13 @@
 import dao.QuestionJDBCImpl;
 import dao.ServiceJDBCImpl;
 import dao.UserJDBCImpl;
+import dao.hibernateImpl.UserHibernateImpl;
 
 import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        UserJDBCImpl user = new UserJDBCImpl();
+  /*      UserJDBCImpl user = new UserJDBCImpl();
         QuestionJDBCImpl question = new QuestionJDBCImpl();
         user.addUser("Zmey");
 
@@ -22,6 +23,8 @@ public class Main {
 //      new UserJDBCImpl().deleteUser("DraKoN");
 //        new QuestionJDBCImpl().deleteQuestion("Kak dela?");
 
-        System.out.println(new ServiceJDBCImpl().getStatistic());
+        System.out.println(new ServiceJDBCImpl().getStatistic());*/
+
+        System.out.println(new UserHibernateImpl().getUser(21));
     }
 }

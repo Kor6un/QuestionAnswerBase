@@ -62,6 +62,8 @@ public class ServiceJDBCImpl extends AbstractJDBCImpl {
                         .append(resultSet.getString(SECOND_ARGUMENT)).append(" | ")
                         .append(resultSet.getString(THIRD_ARGUMENT)).append('\n');
             }
+        } finally {
+            Driver.closeResultSet(resultSet);
         }
         return stringBuilder.toString();
     }

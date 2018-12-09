@@ -82,7 +82,7 @@ public class QuestionJDBCImpl extends AbstractJDBCImpl {
             statement.setString(FIRST_ARGUMENT, question);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                result = new Question(resultSet.getInt("id"), question, resultSet.getInt("user_id"));
+                result = new Question(resultSet.getInt("id"), question);
             }
         } finally {
             Driver.closeResultSet(resultSet);
