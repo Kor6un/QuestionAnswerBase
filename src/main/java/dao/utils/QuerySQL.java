@@ -10,6 +10,7 @@ public enum QuerySQL {
     SELECT_ANSWER_ID("SELECT id FROM answer WHERE answer = ?"),
     SELECT_ANSWER("SELECT * FROM answer WHERE user_id = ? AND question_id = ?"),
     SELECT_USER_ANSWERS("SELECT * FROM answer WHERE user_id = ?"),
+    SELECT_QUESTION_ANSWER("SELECT * FROM answer WHERE question_id = ?"),
     DELETE_USER("DELETE FROM users WHERE id = ?"),
     DELETE_ANSWER("DELETE FROM answer WHERE id = ?"),
     DELETE_QUESTION("DELETE FROM question WHERE id = ?"),

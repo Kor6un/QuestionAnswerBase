@@ -42,7 +42,19 @@ public class UserJDBCImpl extends AbstractJDBCImpl {
         return user;
     }
 
+   /* private int getUserID(String userName, Connection connection) throws SQLException {
+        int userID;
+        if ((userID = new UserJDBCImpl().
+                getEntityID(userName, QuerySQL.SELECT_USER_ID.getQuery(), connection)) == -1) {
+            throw new SQLException("unknown user");
+        }
+        return userID;
+    }*/
+
     public void deleteUser(String name) throws SQLException {
+        UserJDBCImpl userJDBC = new UserJDBCImpl();
+        QuestionJDBCImpl questionJDBC = new QuestionJDBCImpl();
+        AnswerJDBCImpl answerJDBC = new AnswerJDBCImpl();
         Connection connection = null;
 
         try {
@@ -58,12 +70,12 @@ public class UserJDBCImpl extends AbstractJDBCImpl {
             int questionID;
             int answerID;
 
-            if ((answers = getBoundedLink(userID, QuerySQL.SELECT_USER_ANSWERS.getQuery(), connection)) != null) {
+            if ((answers = answerJDBC.getBoundedLink(userID, QuerySQL.SELECT_USER_ANSWERS.getQuery(), connection)) != null) {
                 for (Answer a: answers) {
                     questionID = a.getQuestionID();
                     answerID = a.getId();
-                    deleteAnswer(answerID, connection);
-                    deleteQuestion(questionID,connection);
+                    answerJDBC.deleteAnswer(answerID, connection);
+                    questionJDBC.deleteQuestion(questionID,connection);
                 }
             }
 
@@ -75,38 +87,6 @@ public class UserJDBCImpl extends AbstractJDBCImpl {
             connection.rollback();
         } finally {
             Driver.closeConnection(connection);
-        }
-    }
-
-    private void deleteQuestion(int questionID, Connection connection) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(QuerySQL.DELETE_QUESTION.getQuery())) {
-            statement.setInt(FIRST_ARGUMENT, questionID);
-            statement.execute();
-        }
-    }
-
-    private void deleteAnswer(int answerID, Connection connection) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(QuerySQL.DELETE_ANSWER.getQuery())) {
-            statement.setInt(FIRST_ARGUMENT, answerID);
-            statement.execute();
-        }
-    }
-
-    private List<Answer> getBoundedLink(int id, String sql, Connection connection) throws SQLException {
-        List<Answer> answers;
-        ResultSet resultSet = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(FIRST_ARGUMENT, id);
-
-            resultSet = statement.executeQuery();
-            answers = new ArrayList<>();
-            while (resultSet.next()) {
-                answers.add(new Answer(resultSet.getInt("id"), resultSet.getString("answer"),
-                        resultSet.getInt("question_id"), resultSet.getInt("user_id")));
-            }
-            return answers.size() > 0 ? answers : null;
-        } finally {
-            Driver.closeResultSet(resultSet);
         }
     }
 

@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class QuestionJDBCImpl extends AbstractJDBCImpl {
     public int addQuestion(String question, int userID) {
         int result;
@@ -34,6 +33,17 @@ public class QuestionJDBCImpl extends AbstractJDBCImpl {
         return result;
     }
 
+    public void deleteQuestion(int questionID, Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(QuerySQL.SELECT_QUESTION_ANSWER.getQuery());
+        statement.setInt(FIRST_ARGUMENT, questionID);
+        ResultSet resultSet = statement.executeQuery();
+        if (!resultSet.next()) {
+            statement = connection.prepareStatement(QuerySQL.DELETE_QUESTION.getQuery());
+            statement.setInt(FIRST_ARGUMENT, questionID);
+            statement.execute();
+        }
+    }
+
     private Question selectQuestion(String question, Connection connection) throws SQLException {
         ResultSet resultSet = null;
         Question result = null;
@@ -50,7 +60,6 @@ public class QuestionJDBCImpl extends AbstractJDBCImpl {
     }
 
     private void insertQuestion(String question, int userID, Connection connection) throws SQLException {
-
         try (PreparedStatement statement = connection.prepareStatement(QuerySQL.INSERT_QUESTION.getQuery())){
             statement.setString(FIRST_ARGUMENT, question);
             statement.setInt(SECOND_ARGUMENT, userID);

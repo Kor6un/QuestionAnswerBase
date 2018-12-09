@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnswerJDBCImpl extends AbstractJDBCImpl {
     public int addAnswer(String answer, int questionID, int userID, Connection connection) throws SQLException {
@@ -40,5 +42,30 @@ public class AnswerJDBCImpl extends AbstractJDBCImpl {
             Driver.closeResultSet(resultSet);
         }
         return answer;
+    }
+
+    public List<Answer> getBoundedLink(int id, String sql, Connection connection) throws SQLException {
+        List<Answer> answers;
+        ResultSet resultSet = null;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(FIRST_ARGUMENT, id);
+
+            resultSet = statement.executeQuery();
+            answers = new ArrayList<>();
+            while (resultSet.next()) {
+                answers.add(new Answer(resultSet.getInt("id"), resultSet.getString("answer"),
+                        resultSet.getInt("question_id"), resultSet.getInt("user_id")));
+            }
+            return answers.size() > 0 ? answers : null;
+        } finally {
+            Driver.closeResultSet(resultSet);
+        }
+    }
+
+    public void deleteAnswer(int answerID, Connection connection) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(QuerySQL.DELETE_ANSWER.getQuery())) {
+            statement.setInt(FIRST_ARGUMENT, answerID);
+            statement.execute();
+        }
     }
 }

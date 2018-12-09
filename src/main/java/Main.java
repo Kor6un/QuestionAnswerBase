@@ -19,7 +19,7 @@ public class Main {
 //        new ServiceJDBCImpl().getAnswer("DraKoN", "Where are you?", "I don't know.");
 //        new ServiceJDBCImpl().getAnswer("Kkk", "What are you doing?", "Kill you)))");
 
-      new UserJDBCImpl().deleteUser("Zmey");
+      new UserJDBCImpl().deleteUser("DraKoN");
 
     }
 }
